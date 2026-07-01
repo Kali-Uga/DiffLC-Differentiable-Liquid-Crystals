@@ -33,9 +33,13 @@ def eps_from_Q(Q, *, no: float, ne: float, S0: float):
     eps_iso = no**2 + delta_n2 / 3.0
     eps_raw = eps_iso * I3 + (delta_n2 / S0) * Q
     eps_sym = 0.5 * (eps_raw + jnp.swapaxes(eps_raw, -2, -1))
-    vals, vecs = jnp.linalg.eigh(eps_sym)
-    vals = jnp.clip(vals, no**2 * 0.5, ne**2 * 1.5)
-    return (vecs * vals[..., None, :]) @ jnp.swapaxes(vecs, -2, -1)
+    # NOTE: for physical Q (S ≤ S0) the eigenvalues of eps_sym already lie in
+    # [no², ne²]; the former eigh-based clip to [0.5 no², 1.5 ne²] was therefore
+    # never active, while eigh has a singular gradient at degenerate eigenvalues
+    # (uniform / homeotropic director under strong field) → NaN in autodiff.
+    # Returning the symmetric tensor directly is mathematically equivalent here
+    # and keeps the optics differentiable.
+    return eps_sym
 
 
 # ---------------------------------------------------------------------------
@@ -116,12 +120,10 @@ def jones_layer_normal(
     eps_iso = no**2 + delta_n2 / 3.0
 
     eps = eps_iso * I3 + (delta_n2 / S0) * Q_layer
-    eps_sym = 0.5 * (eps + eps.T)
-    vals_3d, vecs_3d = jnp.linalg.eigh(eps_sym)
-    vals_3d = jnp.clip(vals_3d, no**2 * 0.5, ne**2 * 1.5)
-
-    # Effective 2×2 in-plane dielectric tensor
-    eps_full = (vecs_3d * vals_3d[None, :]) @ vecs_3d.T
+    # Symmetric dielectric tensor used directly (see eps_from_Q): the previous
+    # eigh-clip was inactive for physical Q and introduced NaN gradients at
+    # degenerate eigenvalues. eps is symmetric by construction.
+    eps_full = 0.5 * (eps + eps.T)
     eps_tt = eps_full[:2, :2]
     eps_tz = eps_full[:2, 2:3]
     eps_zt = eps_full[2:3, :2]
