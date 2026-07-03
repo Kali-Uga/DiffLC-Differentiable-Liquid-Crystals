@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "difflc"
-version = "0.2.0"
+version = "0.3.0"
 description = "Differentiable Landau-de Gennes simulation for nematic LC cells — JAX backend, full Berreman optics"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -43,8 +43,8 @@ research = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Kali-Uga/DiffLC-Differentiable-Liquid-Crystals-"
-Repository = "https://github.com/Kali-Uga/DiffLC-Differentiable-Liquid-Crystals-"
+Homepage = "https://github.com/Kali-Uga/DiffLC-Differentiable-Liquid-Crystals"
+Repository = "https://github.com/Kali-Uga/DiffLC-Differentiable-Liquid-Crystals"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
