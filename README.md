@@ -21,7 +21,7 @@ This framework is specifically engineered to bridge the gap between classical co
 The codebase is modularized to support both direct physical simulations and integration into larger AI-driven research pipelines:
 
 - `src/difflc/solver.py`: Semi-implicit time-stepping LdG engine via JAX `lax.scan` and `jax.jit`.
-- `src/difflc/qtensor.py`: Symmetric-traceless $Q$-tensor packing (5↔3×3), angle/$Q$ conversions, and eigenvalue diagnostics (scalar order, biaxiality).
+- `src/difflc/qtensor.py`: Symmetric-traceless $Q$-tensor packing (5↔3×3), angle $Q$ conversions, and eigenvalue diagnostics (scalar order, biaxiality).
 - `src/difflc/optics.py`: Differentiable optical response models (Berreman 4×4; a Jones normal-incidence path is also provided — see note in the module).
 - `src/difflc/oed.py`: Fisher-information matrix and local (frequentist) D-optimal design utilities.
 - `src/difflc/inverse.py`: Non-linear parameter recovery via multi-start Trust Region methods.
