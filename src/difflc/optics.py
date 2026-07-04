@@ -184,6 +184,15 @@ def stokes_oblique(
         (n_glass ≈ n_o), so Fresnel reflection is weak and the entrance/exit
         interfaces are nearly index-matched. ξ = n_ambient·sinθ (Snell).
 
+    LIMITATION: the same ``n_ambient`` is used on BOTH sides (S_t = S_i), i.e. a
+        symmetric ambient. An asymmetric stack (e.g. glass entrance / air exit)
+        is not representable; add a second exit index to S_t if ever needed.
+
+    CONVENTION: the returned Stokes vector is built from the transmitted (p, s)
+        MODE AMPLITUDES (t_p, t_s), not from the lab-frame transverse field
+        (Ex = cosθ·t_p at oblique incidence). At θ = 0 the two coincide; at
+        oblique incidence compare with experiment in the p/s basis.
+
     Returns
     -------
     (4,) Stokes vector

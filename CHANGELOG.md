@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.2
+
+Documentation + a defensive guard (no behaviour change for valid inputs).
+
+### Added
+- `stokes_oblique` docstring now states two properties explicitly: the boundary
+  matching uses a **symmetric ambient** (`S_t = S_i`, same `n_ambient` both
+  sides — an asymmetric glass/air stack is not representable), and the returned
+  Stokes is built from the transmitted **(p, s) mode amplitudes**, not the
+  lab-frame transverse field (they coincide at θ=0; compare in the p/s basis at
+  oblique incidence).
+- `_tridiagonal_coefficients` raises `ValueError` for `Nz < 3` (a 2-node grid is
+  degenerate — both nodes are anchors, no interior node) instead of silently
+  building a meaningless system.
+
 ## 0.3.1
 
 Gradient-safety and vectorisation pass (no change to the physics; the forward
