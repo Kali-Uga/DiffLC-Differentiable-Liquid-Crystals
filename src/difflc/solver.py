@@ -199,6 +199,12 @@ def _tridiagonal_coefficients(dt, L1, gamma_Q, W, dz, Nz):
     rotational viscosity is angle-dependent. A scalar reproduces the original
     uniform coefficients bit-for-bit. Returns (lower, diag, upper, c_w).
     """
+    # The corner assignments below (upper[0], lower[-1]) and the two boundary
+    # anchors (diag[0], diag[-1]) require at least one interior node; Nz == 2 is
+    # degenerate (both nodes are anchors) and physically meaningless here. Nz is
+    # a static Python int, so this is a trace-time guard, not a runtime branch.
+    if int(Nz) < 3:
+        raise ValueError(f"Nz={Nz}: the tridiagonal scheme requires Nz >= 3.")
     gq = jnp.broadcast_to(jnp.asarray(gamma_Q, dtype=jnp.float64), (Nz,))
     c_el = dt * gq * L1 / dz**2          # (Nz,)
     c_w = dt * gq * W / (0.5 * dz)       # (Nz,) — only [0],[-1] used at anchors

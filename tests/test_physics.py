@@ -343,3 +343,16 @@ def test_solve_inverse_strict_stability_raises():
     with pytest.raises(ValueError, match="stability"):
         solve_inverse({"t": M}, [proto], np.zeros(10), p_true, 0.01,
                       dt=2.5e-4, T_on=0.05, T_off=0.05, T_eq=0.02, record_every=2)
+
+
+def test_tridiagonal_requires_three_nodes():
+    """_tridiagonal_coefficients must reject Nz < 3 (a 2-node grid is degenerate:
+    both nodes are anchors, no interior node) with a clear ValueError rather than
+    silently building a meaningless system."""
+    from difflc.solver import _tridiagonal_coefficients
+
+    with pytest.raises(ValueError, match="Nz"):
+        _tridiagonal_coefficients(2.5e-4, 1e-11, 9.0, 1e-3, 3e-7, 2)
+    # Nz = 3 (one interior node) is the minimal valid grid and must not raise.
+    out = _tridiagonal_coefficients(2.5e-4, 1e-11, 9.0, 1e-3, 3e-7, 3)
+    assert len(out) == 4
